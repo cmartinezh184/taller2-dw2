@@ -12,6 +12,6 @@ router.post('/eliminar', personas.delete);
 
 router.post('/actualizar', personas.update);
 
-router.get('/info', persona.getOne);
+router.get('/info', personas.getOne);
 
 module.exports = router;
