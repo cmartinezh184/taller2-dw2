@@ -6,6 +6,8 @@ const InitiateMongoServer = require('./config/db');
 const personas = require('./routes/persona.routes');
 const barcos = require('./routes/barco.routes');
 const salidas = require('./routes/salida.routes');
+const socios = require('./routes/socio.routes');
+const patrones = require('./routes/patron.routes');
 
 const app = express();
 
@@ -21,7 +23,10 @@ app.get('/', (req, res) => {
 // Routing
 app.use('/personas', personas);
 app.use('/barcos', barcos);
-app.use('/salidas', barcos);
+app.use('/salidas', salidas);
+app.use('/socios', socios);
+app.use('/patrones', patrones);
+
 
 // Port
 const port = process.env.PORT || 4000;

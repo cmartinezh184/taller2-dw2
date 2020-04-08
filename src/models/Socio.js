@@ -4,6 +4,10 @@ const socioSchema = mongoose.Schema ({
     dniSocio: {
         type: String,
         required: true
+    },
+    dniPersona: {
+        type: Number,
+        required: true
     }
 });
 
