@@ -3,7 +3,7 @@ const Socio = require('../models/Socio');
 
 exports.list = async (req, res) => {
     try {
-        const socios = await Persona.find({ dniSocio: { $ne: "" }});
+        const socios = await Persona.find({ dniSocio: { $ne: "" } });
         res.json(socios);
     } catch (e) {
         res.send({
@@ -34,8 +34,6 @@ exports.create = async (req, res) => {
         await socio.save();
         await Persona.findOneAndUpdate({ dni: dniPersona }, { $set: { dniSocio: socio.dniSocio } })
 
-        // update persona code
-
         res.status(200).json({
             message: "Socio agregado exitosamente"
         });
@@ -45,20 +43,39 @@ exports.create = async (req, res) => {
     }
 };
 
-exports.delete = (req, res) => {
-    res.send({
-        message: "To-do code"
-    })
+exports.delete = async (req, res) => {
+    try {
+        let socio = await Socio.findOne({ dniPersona: req.body.dniPersona });
+        if (socio) {
+            let barcos = await Barco.find({ dniSocio: socio.dniSocio });
+            if (barcos) {
+                barcos.forEach(element => {
+                    let salidas = Salida.findOneAndDelete({ matricula: element.matricula });
+                    salidas.forEach(element => {
+                        Salida.findByIdAndDelete(element.id);
+                    })
+                    Barco.findByIdAndDelete(element.id);
+                });
+            }
+            await Socio.findByIdAndDelete(socio.id);
+            res.send({
+                message: "Socio eliminado correcetamente"
+            })
+        }
+    } catch (e) {
+        res.send({
+            message: "Error al eliminar socio"
+        })
+    }
 };
 
-exports.update = (req, res) => {
-    res.send({
-        message: "To-do code"
-    })
-};
-
-exports.getOne = (req, res) => {
-    res.send({
-        message: "To-do code"
-    })
+exports.getOne = async (req, res) => {
+    try {
+        const socio = await Persona.find({ dniSocio: req.body.dniSocio });
+        res.json(socio);
+    } catch (e) {
+        res.send({
+            message: "Error al cargar socio"
+        })
+    }
 };

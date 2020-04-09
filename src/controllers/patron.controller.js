@@ -32,7 +32,7 @@ exports.create = async (req, res) => {
         });
 
         await patron.save();
-        await Persona.findOneAndUpdate({ dni: dniPersona }, { $set: { dniPatron: patron.dniPatron } })
+        await Persona.findOneAndUpdate({ dni: dniPersona }, { $set: { dniPatron: patron.dniPatron }})
 
         // update persona code
 

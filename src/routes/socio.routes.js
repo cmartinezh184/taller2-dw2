@@ -10,8 +10,6 @@ router.post('/registrar', socios.create);
 
 router.post('/eliminar', socios.delete);
 
-router.post('/actualizar', socios.update);
-
 router.get('/info', socios.getOne);
 
 module.exports = router;

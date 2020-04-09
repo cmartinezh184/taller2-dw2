@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const salidaSchema = mongoose.Schema({
+    idSalida: {
+        type: String,
+        required: true
+    },
     matricula: {
         type: String,
         required: true

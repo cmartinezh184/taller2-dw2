@@ -1,6 +1,8 @@
 const Persona = require('../models/Persona');
 const Socio = require('../models/Socio');
 const Patron = require('../models/Patron');
+const Barco = require('../models/Barco');
+const Salida = require('../models/Salida');
 
 exports.list = async (req, res) => {
     try {
@@ -54,15 +56,28 @@ exports.delete = async (req, res) => {
     try {
         let socio = await Socio.findOne({ dniPersona: req.body.dniPersona });
         if (socio) {
+            let barcos = await Barco.find({ dniSocio: socio.dniSocio});
+            if(barcos) {
+                barcos.forEach(element => {
+                    Barco.findByIdAndDelete(element.id)
+                });
+            }
             await Socio.findByIdAndDelete(socio.id);
         }
 
         let patron = await Patron.findOne({ dniPersona: req.body.dniPersona });
+        console.log(patron);
         if (patron) {
+            let salidas = Salida.find({ dniPatron: patron.dniPatron });
+            if (salidas) {
+                res.status(500).send({
+                    message: "No puede eliminar este patron ya que tiene salidas registradas"
+                })
+            }
             await Patron.findByIdAndDelete(patron.id);
         }
 
-        await Persona.findOneAndDelete({dni: req.body.dniPersona});
+        await Persona.findOneAndDelete({dni: req.body.dniPersona}, { new: true, useFindAndModify: false });
         res.send({
             message: "Persona eliminada correcetamente"
         })
